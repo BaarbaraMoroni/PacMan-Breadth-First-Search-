@@ -1,0 +1,95 @@
+from collections import deque
+
+# Defina o tabuleiro do jogo
+tabuleiro = [
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+    [".", ".", ".", ".", ".", ".", ".", ".", ".", "."],
+]
+
+# Defina a posição inicial do Pac-Man
+inicio = (0, 0)
+
+# Defina as posições das bolinhas maiores
+bolinha1 = (9, 0)
+bolinha2 = (9, 9)
+
+# Defina as coordenadas de movimento (cima, baixo, esquerda, direita)
+movimentos = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+def bfs(tabuleiro, inicio, destino):
+    fila = deque()
+    fila.append(inicio)
+    
+    visitados = set()
+    visitados.add(inicio)
+    
+    caminho = {}
+    caminho[inicio] = None
+    
+    while fila:
+        celula_atual = fila.popleft()
+        
+        if celula_atual == destino:
+            break
+        
+        for movimento in movimentos:
+            nova_celula = (celula_atual[0] + movimento[0], celula_atual[1] + movimento[1])
+            
+            if valida_celula(tabuleiro, nova_celula) and nova_celula not in visitados:
+                fila.append(nova_celula)
+                visitados.add(nova_celula)
+                caminho[nova_celula] = celula_atual
+    
+    if destino in caminho:
+        caminho_percorrido = reconstruir_caminho(caminho, destino)
+        return caminho_percorrido
+    else:
+        return None
+
+def valida_celula(tabuleiro, celula):
+    linhas = len(tabuleiro)
+    colunas = len(tabuleiro[0])
+    linha, coluna = celula
+    
+    return 0 <= linha < linhas and 0 <= coluna < colunas and tabuleiro[linha][coluna] == "."
+
+def reconstruir_caminho(caminho, destino):
+    caminho_percorrido = []
+    celula = destino
+    
+    while celula is not None:
+        caminho_percorrido.append(celula)
+        celula = caminho[celula]
+    
+    caminho_percorrido.reverse()
+    return caminho_percorrido
+
+# Encontre o caminho para a primeira bolinha maior
+caminho_bolinha1 = bfs(tabuleiro, inicio, bolinha1)
+if caminho_bolinha1:
+    print("Caminho para a primeira bolinha maior:")
+    for celula in caminho_bolinha1:
+        print(celula)
+else:
+    print("Não há caminho para a primeira bolinha maior.")
+
+print()
+
+# Encontre o caminho para a segunda bolinha maior
+caminho_bolinha2 = bfs(tabule)
+# Encontre o caminho para a segunda bolinha maior
+caminho_bolinha2 = bfs(tabuleiro, bolinha1, bolinha2)
+if caminho_bolinha2:
+    print("Caminho para a segunda bolinha maior:")
+    for celula in caminho_bolinha2:
+        print(celula)
+else:
+    print("Não há caminho para a segunda bolinha maior.")
